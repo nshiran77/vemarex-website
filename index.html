@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vemarex — قيد التطوير | Under Development</title>
+
+    <!-- ============================================================
+         تحسين محركات البحث (SEO) وعلامات المشاركة (Open Graph)
+         ============================================================ -->
+    <meta name="description" content="Vemarex للحلول الطبية - موقع د. محمد النشيران ينطلق قريباً. تحت التطوير." />
+    <meta property="og:title" content="Vemarex — للحلول الطبية" />
+    <meta property="og:description" content="موقع د. محمد النشيران ينطلق قريباً. تحت التطوير." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://vemarex.com" />
+    <meta property="og:image" content="https://via.placeholder.com/1200x630/1a1638/f5cdb8?text=Vemarex+Medical" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- ============================================================
+         تحميل مسبق للخطوط (Font Preloading) لزيادة السرعة
+         ============================================================ -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ============================================================
+               المتغيرات العالمية – هوية Rose Gold محسّن التباين + Cyan
+            ============================================================ */
+        :root {
+            --white: #ffffff;
+            --rose-gold: #f5cdb8;
+            /* تم تفتيحه لتحسين التباين */
+            --rose-gold-dark: #e6b39e;
+            --rose-glow: rgba(245, 205, 184, 0.35);
+            --cyan-neon: #7ad0f5;
+            --cyan-glow: rgba(122, 208, 245, 0.20);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-border-hover: rgba(245, 205, 184, 0.40);
+            --shadow-heavy: 0 20px 60px rgba(0, 0, 0, 0.7);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+        }
+
+        /* ============================================================
+               إعادة ضبط وإعدادات أساسية
+            ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Cairo', 'Inter', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            /* تغيير مهم: السماح بالتمرير مع تمركز المحتوى */
+            display: flex;
+            align-items: flex-start;
+            /* ليس center لتجنب القص */
+            justify-content: center;
+            padding: 40px 20px;
+            /* زيادة padding الأسفل */
+            padding-bottom: 60px;
+            background: #0b0d1a;
+            position: relative;
+            overflow-y: auto;
+            /* يسمح بالتمرير عند الحاجة */
+        }
+
+        /* ============================================================
+               كرات التوهج الخلفية (مع إعدادات الانتقال للـ Parallax)
+            ============================================================ */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            transition: transform 0.12s cubic-bezier(0.22, 1, 0.36, 1);
+            will-change: transform;
+        }
+
+        .glow-orb--cyan {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(122, 208, 245, 0.25) 0%, transparent 70%);
+            top: -10%;
+            left: -10%;
+        }
+
+        .glow-orb--rose {
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(245, 205, 184, 0.20) 0%, transparent 70%);
+            bottom: -15%;
+            right: -10%;
+            animation-delay: -4s;
+        }
+
+        .glow-orb--purple {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(160, 130, 210, 0.15) 0%, transparent 70%);
+            top: 40%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation-delay: -8s;
+        }
+
+        /* حركة عائمة تلقائية عند عدم وجود ماوس */
+        @keyframes floatGlow {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                transform: translate(40px, -30px) scale(1.1);
+            }
+        }
+
+        .glow-orb {
+            animation: floatGlow 12s infinite alternate ease-in-out;
+        }
+
+        /* تعطيل Parallax على الهواتف لتحسين الأداء */
+        @media (max-width: 768px) {
+            .glow-orb {
+                transition: none !important;
+                animation-duration: 20s;
+            }
+        }
+
+        /* ============================================================
+               طبقة التدرج الأساسية
+            ============================================================ */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(145deg, #0f111f 0%, #181432 45%, #1f1838 80%, #0e0c1a 100%);
+            opacity: 0.85;
+            z-index: 0;
+        }
+
+        /* ============================================================
+               الحاوية الرئيسية (وسم Main) مع تمركز مرن
+            ============================================================ */
+        main {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            width: 100%;
+            margin: auto;
+            /* توسيط أفقي وعمودي مع السماح بالتمرير */
+            opacity: 0;
+            animation: fadeIn 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ============================================================
+               العلامة التجارية (باستخدام Hgroup الدلالي)
+            ============================================================ */
+        .brand {
+            margin-bottom: 6px;
+        }
+
+        .brand-main {
+            font-size: clamp(3rem, 7.5vw, 5.2rem);
+            font-weight: 800;
+            color: var(--white);
+            letter-spacing: 4px;
+            line-height: 1.1;
+            text-shadow: 0 0 50px rgba(255, 255, 255, 0.10), 0 0 100px var(--rose-glow);
+        }
+
+        .brand-main span {
+            color: var(--rose-gold);
+            text-shadow: 0 0 40px var(--rose-glow), 0 0 80px rgba(245, 205, 184, 0.2);
+        }
+
+        .brand-sub {
+            font-size: clamp(1rem, 2.2vw, 1.4rem);
+            font-weight: 500;
+            color: var(--rose-gold);
+            letter-spacing: 2px;
+            margin-top: -4px;
+            opacity: 0.95;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .brand-sub .en {
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.50);
+            letter-spacing: 1px;
+        }
+
+        .brand-sub .medical-icon {
+            font-size: 0.9rem;
+            color: var(--cyan-neon);
+            opacity: 0.7;
+        }
+
+        /* ============================================================
+               شارة التطوير
+            ============================================================ */
+        .dev-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(245, 205, 184, 0.08);
+            border: 1px solid rgba(245, 205, 184, 0.20);
+            color: var(--rose-gold);
+            padding: 8px 30px;
+            border-radius: 60px;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin: 18px 0 28px 0;
+            font-weight: 600;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 0 30px rgba(245, 205, 184, 0.05);
+        }
+
+        .dev-badge::before {
+            content: "● ";
+            animation: pulseDot 1.6s infinite;
+            margin-left: 6px;
+            font-size: 1rem;
+            color: var(--cyan-neon);
+        }
+
+        @keyframes pulseDot {
+            0%,
+            100% {
+                opacity: 0.2;
+                transform: scale(0.8);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.3);
+            }
+        }
+
+        /* ============================================================
+               اسم الطبيب
+            ============================================================ */
+        .doctor-name {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+        }
+
+        .doctor-name-en {
+            font-size: 1.15rem;
+            font-weight: 400;
+            font-family: 'Inter', sans-serif;
+            color: rgba(255, 255, 255, 0.55);
+            letter-spacing: 0.5px;
+            margin-bottom: 30px;
+        }
+
+        /* ============================================================
+               الفاصل الزخرفي
+            ============================================================ */
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            margin: 0 auto 32px;
+            width: 100%;
+            max-width: 220px;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--rose-gold), transparent);
+            opacity: 0.4;
+        }
+
+        .divider-line--cyan {
+            background: linear-gradient(90deg, transparent, var(--cyan-neon), transparent);
+            opacity: 0.3;
+            height: 2px;
+        }
+
+        .divider-icon {
+            color: var(--cyan-neon);
+            font-size: 1.1rem;
+            opacity: 0.8;
+            text-shadow: 0 0 20px var(--cyan-glow);
+        }
+
+        /* ============================================================
+               العد التنازلي (مع إعدادات النبض)
+            ============================================================ */
+        .countdown-grid {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            margin-bottom: 46px;
+        }
+
+        .countdown-box {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 20px 18px;
+            min-width: 90px;
+            backdrop-filter: blur(16px);
+            box-shadow: var(--shadow-heavy), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .countdown-box:hover {
+            transform: translateY(-6px);
+            border-color: var(--glass-border-hover);
+            box-shadow: 0 0 40px rgba(122, 208, 245, 0.10), var(--shadow-heavy);
+        }
+
+        .countdown-num {
+            font-size: 3.2rem;
+            font-weight: 800;
+            color: var(--white);
+            line-height: 1;
+            margin-bottom: 4px;
+            font-variant-numeric: tabular-nums;
+            font-family: 'Inter', 'Cairo', sans-serif;
+            text-shadow: 0 0 30px var(--cyan-glow), 0 0 60px rgba(122, 208, 245, 0.05);
+            transition: transform 0.1s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: inline-block;
+        }
+
+        .countdown-label {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.45);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        /* ============================================================
+               عبارات الترحيب
+            ============================================================ */
+        .tagline {
+            color: var(--white);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .tagline-en {
+            font-family: 'Inter', sans-serif;
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 0.95rem;
+            font-weight: 400;
+            margin-bottom: 30px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ============================================================
+               بطاقات الاتصال
+            ============================================================ */
+        .contact-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 18px;
+            margin: 10px 0 20px;
+        }
+
+        .contact-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            padding: 16px 26px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            backdrop-filter: blur(12px);
+            text-decoration: none;
+            color: var(--white);
+            min-width: 240px;
+            transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .contact-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--rose-gold);
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 0 50px rgba(245, 205, 184, 0.10), var(--shadow-heavy);
+        }
+
+        .contact-icon {
+            font-size: 1.7rem;
+            flex-shrink: 0;
+            line-height: 1;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.05));
+        }
+
+        .contact-text {
+            text-align: right;
+            line-height: 1.4;
+            width: 100%;
+        }
+
+        .contact-label {
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.35);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+            font-weight: 600;
+        }
+
+        .contact-value {
+            font-size: 0.95rem;
+            color: var(--white);
+            font-weight: 500;
+            display: inline-block;
+            font-family: 'Inter', 'Cairo', sans-serif;
+            letter-spacing: 0.3px;
+        }
+
+        .ltr-fix {
+            direction: ltr !important;
+            text-align: left !important;
+            display: inline-block;
+        }
+
+        /* ============================================================
+               تذييل الصفحة
+            ============================================================ */
+        .footer-note {
+            margin-top: 42px;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.15);
+            letter-spacing: 2px;
+            font-weight: 400;
+        }
+
+        /* ============================================================
+               الاستجابة للشاشات
+            ============================================================ */
+        @media (max-width: 640px) {
+            .countdown-box {
+                min-width: 70px;
+                padding: 14px 10px;
+            }
+            .countdown-num {
+                font-size: 2.4rem;
+            }
+            .countdown-label {
+                font-size: 0.6rem;
+            }
+
+            .contact-item {
+                min-width: 100%;
+                justify-content: flex-start;
+                padding: 14px 18px;
+            }
+
+            .doctor-name {
+                font-size: 1.3rem;
+            }
+            .doctor-name-en {
+                font-size: 0.95rem;
+            }
+
+            .brand-sub {
+                font-size: 0.9rem;
+            }
+            .glow-orb {
+                display: none;
+                /* إخفاء كرات التوهج كلياً على الشاشات الصغيرة جداً لتوفير الأداء */;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .countdown-grid {
+                gap: 10px;
+            }
+            .countdown-box {
+                min-width: 62px;
+                padding: 12px 6px;
+            }
+            .countdown-num {
+                font-size: 1.9rem;
+            }
+            .brand-main {
+                font-size: 2.6rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== كرات التوهج الخلفية ===== -->
+    <div class="glow-orb glow-orb--cyan" aria-hidden="true"></div>
+    <div class="glow-orb glow-orb--rose" aria-hidden="true"></div>
+    <div class="glow-orb glow-orb--purple" aria-hidden="true"></div>
+
+    <!-- ============================================================
+    المحتوى الرئيسي (وسم Main + هيكل دلالي)
+    ============================================================ -->
+    <main>
+
+        <!-- ===== العلامة التجارية (Hgroup) ===== -->
+        <hgroup class="brand">
+            <h1 class="brand-main">Vema<span>rex</span></h1>
+            <p class="brand-sub">
+                <span class="medical-icon">⚕️</span>
+                للحلول الطبية
+                <span style="color:rgba(255,255,255,0.2); margin:0 4px;">|</span>
+                <span class="en">Medical Solutions</span>
+            </p>
+        </hgroup>
+
+        <!-- ===== شارة التطوير ===== -->
+        <div class="dev-badge" role="status" aria-live="polite">قيد التطوير &bull; Under Development</div>
+
+        <!-- ===== اسم الطبيب ===== -->
+        <p class="doctor-name">د. محمد عويد النشيران</p>
+        <p class="doctor-name-en">Dr. Mohammad Nushiran</p>
+
+        <!-- ===== فاصل زخرفي ===== -->
+        <div class="divider" role="separator">
+            <span class="divider-line divider-line--cyan"></span>
+            <span class="divider-icon">◆</span>
+            <span class="divider-line"></span>
+        </div>
+
+        <!-- ===== عبارات الترحيب ===== -->
+        <p class="tagline">موقعنا ينطلق قريباً</p>
+        <p class="tagline-en">Our website is launching soon</p>
+
+        <!-- ===== العد التنازلي (مع aria-live للإعلان عن التحديثات) ===== -->
+        <div class="countdown-grid" id="countdown" aria-live="polite" aria-atomic="true">
+            <div class="countdown-box">
+                <span class="countdown-num" id="days">00</span>
+                <div class="countdown-label">يوم | Days</div>
+            </div>
+            <div class="countdown-box">
+                <span class="countdown-num" id="hours">00</span>
+                <div class="countdown-label">ساعة | Hours</div>
+            </div>
+            <div class="countdown-box">
+                <span class="countdown-num" id="minutes">00</span>
+                <div class="countdown-label">دقيقة | Min</div>
+            </div>
+            <div class="countdown-box">
+                <span class="countdown-num" id="seconds">00</span>
+                <div class="countdown-label">ثانية | Sec</div>
+            </div>
+        </div>
+
+        <!-- ===== معلومات الاتصال (بريد إلكتروني محمي) ===== -->
+        <div class="contact-row">
+            <a href="tel:+963933495233" class="contact-item" aria-label="اتصل بالدكتور عبر الهاتف">
+                <span class="contact-icon">📞</span>
+                <div class="contact-text">
+                    <div class="contact-label">هاتف &bull; Phone</div>
+                    <div class="contact-value ltr-fix">+963 933 495 233</div>
+                </div>
+            </a>
+            <a href="#" id="emailLink" class="contact-item" aria-label="أرسل بريداً إلكترونياً للدكتور">
+                <span class="contact-icon">✉️</span>
+                <div class="contact-text">
+                    <div class="contact-label">بريد إلكتروني &bull; Email</div>
+                    <div class="contact-value ltr-fix" style="text-transform:none;">جاري التحميل...</div>
+                </div>
+            </a>
+        </div>
+
+        <!-- ===== تذييل ===== -->
+        <p class="footer-note">© 2026 Vemarex — جميع الحقوق محفوظة</p>
+
+    </main>
+
+    <!-- ============================================================
+    جافا سكريبت المتكاملة (التشفير، البارالاكس، النبض)
+    ============================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ==========================================================
+            // 1. حماية البريد الإلكتروني (فك التشفير عند التحميل)
+            // ==========================================================
+            function initEmailProtection() {
+                const emailLink = document.getElementById('emailLink');
+                if (!emailLink) return;
+
+                // تشفير البريد بشكل عكسي بسيط (يمنع الحصاد الآلي)
+                const user = 'dr.nshiran';
+                const domain = 'gmail.com';
+                const fullEmail = user + '@' + domain;
+
+                // تحديث الرابط والنص المعروض
+                emailLink.href = 'mailto:' + fullEmail;
+                const valueSpan = emailLink.querySelector('.contact-value');
+                if (valueSpan) {
+                    valueSpan.textContent = fullEmail;
+                }
+            }
+
+            // ==========================================================
+            // 2. العد التنازلي حتى 1 أكتوبر 2026 + تأثير النبض
+            // ==========================================================
+            function initCountdown() {
+                const launchDate = new Date(2026, 9, 1, 0, 0, 0); // 1 أكتوبر
+
+                const daysEl = document.getElementById('days');
+                const hoursEl = document.getElementById('hours');
+                const minutesEl = document.getElementById('minutes');
+                const secondsEl = document.getElementById('seconds');
+
+                if (!daysEl || !hoursEl || !minutesEl || !secondsEl) return;
+
+                let prevSeconds = -1;
+
+                function pad(n) {
+                    return String(n).padStart(2, '0');
+                }
+
+                function update() {
+                    const now = new Date();
+                    const diff = launchDate - now;
+
+                    let days, hours, minutes, seconds;
+                    if (diff <= 0) {
+                        days = 0;
+                        hours = 0;
+                        minutes = 0;
+                        seconds = 0;
+                    } else {
+                        days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                        hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                        seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                    }
+
+                    // تحديث القيم
+                    daysEl.textContent = pad(days);
+                    hoursEl.textContent = pad(hours);
+                    minutesEl.textContent = pad(minutes);
+
+                    // تأثير النبض على الثواني فقط (عند تغيرها)
+                    if (seconds !== prevSeconds) {
+                        secondsEl.textContent = pad(seconds);
+                        // إضافة نبضة تكبير
+                        secondsEl.style.transform = 'scale(1.15)';
+                        setTimeout(() => {
+                            secondsEl.style.transform = 'scale(1)';
+                        }, 120);
+                        prevSeconds = seconds;
+                    }
+                }
+
+                update();
+                setInterval(update, 500); // تحديث كل نصف ثانية لالتقاط النبض بدقة
+            }
+
+            // ==========================================================
+            // 3. تأثير التتبع البصري (Parallax) لكرات التوهج
+            // ==========================================================
+            function initParallax() {
+                // تعطيل على الشاشات الصغيرة (أقل من 768px) للحفاظ على الأداء
+                if (window.innerWidth <= 768) return;
+
+                const orbs = document.querySelectorAll('.glow-orb');
+                if (!orbs.length) return;
+
+                let rafId = null;
+                let lastX = 0,
+                    lastY = 0;
+
+                function updateOrbs(x, y) {
+                    orbs.forEach((orb, index) => {
+                        const speed = 0.6 + index * 0.4; // 0.6, 1.0, 1.4
+                        const moveX = x * speed;
+                        const moveY = y * speed;
+                        // نبقي على الحركة التلقائية (float) ولكن نضيف إزاحة عليها
+                        orb.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                    });
+                }
+
+                function onMouseMove(e) {
+                    // حساب الإزاحة بالنسبة لمنتصف الشاشة بحركة خفيفة (ما بين -15 و 15 بكسل)
+                    const x = ((e.clientX / window.innerWidth) - 0.5) * 30;
+                    const y = ((e.clientY / window.innerHeight) - 0.5) * 30;
+
+                    // منع التحديث المتكرر باستخدام requestAnimationFrame
+                    if (rafId) cancelAnimationFrame(rafId);
+                    rafId = requestAnimationFrame(() => {
+                        updateOrbs(x, y);
+                        rafId = null;
+                    });
+                }
+
+                document.addEventListener('mousemove', onMouseMove, { passive: true });
+            }
+
+            // ==========================================================
+            // 4. تشغيل جميع الوظائف عند تحميل الصفحة
+            // ==========================================================
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    initEmailProtection();
+                    initCountdown();
+                    initParallax();
+                });
+            } else {
+                initEmailProtection();
+                initCountdown();
+                initParallax();
+            }
+
+        })();
+    </script>
+</body>
+</html>
